@@ -1,3 +1,4 @@
+import os
 import ply.yacc as yacc
 import ply.lex as lex
 
@@ -143,8 +144,19 @@ def p_error(p):
         print("Syntax error at EOF")
 
 
-parser = yacc.yacc()
+if os.path.exists("code.txt") :
+    filesize = os.path.getsize("code.txt")
+    if filesize == 0:
+        print("The file is empty")
+    else:
+        parser = yacc.yacc()
+        input = open('code.txt', 'r').read().split('\n')
+        for line in input:
+            yacc.parse(line)
+else:
+    print("File does not exist.")
 
+'''
 while True:
     try:
         s = input('calc > ')
@@ -152,4 +164,4 @@ while True:
         break
     if not s:
         continue
-    yacc.parse(s)
+    yacc.parse(s)'''

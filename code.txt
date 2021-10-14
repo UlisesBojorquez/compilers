@@ -1,0 +1,3 @@
+int a = 1
+float b = 6.2
+print ( a + b )
