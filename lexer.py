@@ -1,7 +1,7 @@
 import ply.lex as lex
 
 #Literales
-lliterals = ['=', '+', '-', '*', '/', '^', '(', ')', '{', '}', '<', '>', ';']
+literals = ['=', '+', '-', '*', '/', '^', '(', ')', '{', '}', '<', '>', ';']
 
 #Palabras reservadas del analisis sintactico
 reserved = {
