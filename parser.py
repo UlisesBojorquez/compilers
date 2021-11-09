@@ -1,4 +1,3 @@
-from abc import abstractproperty
 import ply.yacc as yacc
 from lexer import tokens, literals
 import lexer
