@@ -1,5 +1,5 @@
-from parser import Node, root, printChildren
-import parser
+from pyparser import Node, root, printChildren
+import pyparser
 import sys
 import re
 import copy

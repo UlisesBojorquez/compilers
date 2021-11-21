@@ -1,6 +1,6 @@
 import ply.yacc as yacc
-from lexer import tokens, literals
-import lexer
+from pylexer import tokens, literals
+import pylexer
 import sys
 
 class Node:
@@ -342,7 +342,7 @@ def p_error(p):
 #Se crea el parser
 parser = yacc.yacc()
 
-root=parser.parse(lexer=lexer.lexer, input=open("code2.txt").read())
+root=parser.parse(lexer=pylexer.lexer, input=open("code2.txt").read())
 if root == None:
     sys.exit('\033[91m' + "[ ! ] Error sintáctico" + '\033[0m')
 

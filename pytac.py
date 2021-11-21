@@ -1,6 +1,7 @@
-from parser import Node, printChildren
+from pyparser import Node, printChildren
 import sys
-from semantics import semanticAnalysis, setVariables, root, variables, getVarType
+from pysemantics import semanticAnalysis, setVariables, root, variables, getVarType
+import pylexer
 
 tNodes = {}
 lNodes = {}

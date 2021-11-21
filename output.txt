@@ -1,0 +1,25 @@
+intdecl(a)
+a:=1
+intdecl(b)
+b:=3
+intdecl(c)
+t1 := a + b
+c:=t1
+t2 := c - 1
+if (t2 > 3) goto L1
+t3 := false
+goto L2
+
+L1
+t3 := true
+
+L2
+if (t3) goto L3
+goto L4
+
+L3
+goto L5
+
+L4
+
+L5
