@@ -25,7 +25,7 @@ def getVarType(node, varName):
         return None
 
 def findScopeNode(node):
-    if(node.type in ["block", "for", "dowh", "if", "elif", "else", "while"]):
+    if(node.type in ["block", "for", "if", "elif", "else", "while"]):
         return node
     if(node.parent):
         return findScopeNode(node.parent)
@@ -76,8 +76,9 @@ def treeNumTypeCheck(node):
         else:
             for i in range(len(node.children)):
                 if node.children[i].ptype=="int":
-                    parseNode=Node('int2float',ptype="float")
+                    parseNode=Node('intToFloat',ptype="float")
                     node.children[i].parent=parseNode
+                    print(i)
                     parseNode.children[i]=[node.children[i]]
                     node.children[i]=parseNode
             node.ptype="float"
@@ -96,8 +97,6 @@ def treeNumTypeCheck(node):
             if varType=="string" or varType=="boolean":
                 sys.exit('\033[91m' + "[ ! ] No se puede convertir " + varType + " a numero." + '\033[0m')
             node.ptype=varType
-    #print(node.type+" is "+node.ptype)
-
 
 def treeStrTypeCheck(node):
     if node.type == "num2string":
@@ -160,7 +159,6 @@ def setVariables(r):
     if(r.type == "declaration"):
         if isWithinScope(r,r.children[0].type):
             sys.exit('\033[91m' + "[ ! ] La variable" + r.children[0].type + " ya está declarada en el scope." + '\033[0m')
-        #print(r.children[0].type + " declarado como " + r.children[1].type + " dentro de " + findScopeNode(r).type)
         scopeNode = findScopeNode(r)
         if scopeNode in variables.keys():
             variables[scopeNode].append(VariablePLY(r.children[0].type,r.children[1].type))
@@ -173,7 +171,6 @@ def setVariables(r):
 
 def semanticAnalysis(r):
     checkChildren = True
-
     if(r.type=="assignment"):
         correctType=""
         if r.children[0].type=="declaration":
@@ -187,7 +184,7 @@ def semanticAnalysis(r):
         if correctType == "int" or correctType == "float":
             treeNumTypeCheck(r.children[1])
             if correctType == "float" and r.children[1].ptype == "int":
-                parseNode=Node('int2float', ptype="float")
+                parseNode=Node('intToFloat', ptype="float")
                 r.children[1].parent=parseNode
                 parseNode.children=[r.children[1]]
                 r.children[1]=parseNode
@@ -211,7 +208,5 @@ def semanticAnalysis(r):
         for child in r.children:
             semanticAnalysis(child)
 
-#printVariables(root)
 setVariables(root)
 semanticAnalysis(root)
-#printChildren(root)

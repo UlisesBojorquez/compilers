@@ -26,7 +26,7 @@ def generateTAC(node):
         generateTAC(node.children[0])
         generateTAC(node.children[1])
         f.write(tNodes[node.children[0]]+":="+tNodes[node.children[1]]+"\n")
-    elif node.type in ["int2float","int2string","float2string"]:
+    elif node.type in ["intToFloat","int2string","float2string"]:
         generateTAC(node.children[0])
         f.write("t"+str(tCounter)+" := "+node.type+"("+tNodes[node.children[0]]+")"+"\n")
         tNodes[node]="i"+str(tCounter)
@@ -40,7 +40,7 @@ def generateTAC(node):
     elif node.type in ["!=","==","<",">","<=",">="]:
         generateTAC(node.children[0])
         generateTAC(node.children[1])
-        f.write("if ("+tNodes[node.children[0]]+" "+node.type+" "+tNodes[node.children[1]]+") goto L"+str(lCounter)+"\n")
+        f.write("("+tNodes[node.children[0]]+" "+node.type+" "+tNodes[node.children[1]]+") IFGOTO L"+str(lCounter)+"\n")
         f.write("t"+str(tCounter)+" := false"+"\n")
         f.write("goto L"+str(lCounter+1)+"\n")
         f.write("\nL"+str(lCounter)+"\n")
@@ -52,11 +52,11 @@ def generateTAC(node):
     elif node.type == "and":
         generateTAC(node.children[0])
         generateTAC(node.children[1])
-        f.write("if ("+tNodes[node.children[0]]+") goto L"+str(lCounter)+"\n")
+        f.write("("+tNodes[node.children[0]]+") IFGOTO L"+str(lCounter)+"\n")
         f.write("t"+str(tCounter)+" := false"+"\n")
         f.write("goto L"+str(lCounter+2)+"\n")
         f.write("\nL"+str(lCounter)+"\n")
-        f.write("if ("+tNodes[node.children[1]]+") goto L"+str(lCounter+1)+"\n")
+        f.write("("+tNodes[node.children[1]]+") IFGOTO L"+str(lCounter+1)+"\n")
         f.write("t"+str(tCounter)+" := false"+"\n")
         f.write("goto L"+str(lCounter+2)+"\n")
         f.write("\nL"+str(lCounter+1)+"\n")
@@ -68,8 +68,8 @@ def generateTAC(node):
     elif node.type == "or":
         generateTAC(node.children[0])
         generateTAC(node.children[1])
-        f.write("if ("+tNodes[node.children[0]]+") goto L"+str(lCounter)+"\n")
-        f.write("if ("+tNodes[node.children[1]]+") goto L"+str(lCounter)+"\n")
+        f.write("("+tNodes[node.children[0]]+") IFGOTO L"+str(lCounter)+"\n")
+        f.write("("+tNodes[node.children[1]]+") IFGOTO L"+str(lCounter)+"\n")
         f.write("t"+str(tCounter)+" := false"+"\n")
         f.write("goto L"+str(lCounter+1)+"\n")
         f.write("\nL"+str(lCounter)+"\n")
@@ -80,7 +80,7 @@ def generateTAC(node):
         lCounter+=2
     elif node.type in ["if","elif"]:
         generateTAC(node.children[0])
-        f.write("if ("+tNodes[node.children[0]]+") goto L"+str(lCounter)+"\n")
+        f.write("("+tNodes[node.children[0]]+") IFGOTO L"+str(lCounter)+"\n")
         f.write("goto L"+str(lCounter+1)+"\n")
         f.write("\nL"+str(lCounter)+"\n")
         saveLCount = lCounter
@@ -104,7 +104,7 @@ def generateTAC(node):
     elif node.type == "while":
         generateTAC(node.children[0])
         f.write("\nL"+str(lCounter)+"\n")
-        f.write("if ("+tNodes[node.children[0]]+") goto L"+str(lCounter+1)+"\n")
+        f.write("("+tNodes[node.children[0]]+") IFGOTO L"+str(lCounter+1)+"\n")
         f.write("goto L"+str(lCounter+2)+"\n")
         f.write("\nL"+str(lCounter+1)+"\n")
         saveLCount=lCounter
@@ -112,29 +112,22 @@ def generateTAC(node):
         generateTAC(node.children[1])
         f.write("goto L"+str(saveLCount)+"\n")
         f.write("\nL"+str(saveLCount+2)+"\n")
-    elif node.type == "dowh":
-        f.write("\nL"+str(lCounter)+"\n")
-        saveLCount=lCounter
-        lCounter+=1
-        generateTAC(node.children[0])
-        generateTAC(node.children[1])
-        f.write("if ("+tNodes[node.children[1]]+") goto L"+str(saveLCount)+"\n")
     elif node.type == "for":
         generateTAC(node.children[0])
-        f.write("\nL"+str(lCounter)+"\n")
+        f.write("\nFOR L"+str(lCounter)+"\n")
         saveLCount=lCounter
         lCounter+=1
         generateTAC(node.children[1])
-        f.write("\nL"+str(lCounter)+"\n")
-        f.write("if ("+tNodes[node.children[1]]+") goto L"+str(lCounter+1)+"\n")
+        f.write("\nFOR L"+str(lCounter)+"\n")
+        #f.write("("+tNodes[node.children[1]]+") IFGOTO L"+str(lCounter+1)+"\n")
         f.write("goto L"+str(lCounter+2)+"\n")
-        f.write("\nL"+str(lCounter+1)+"\n")
+        f.write("\nFOR L"+str(lCounter+1)+"\n")
         saveLCount2=lCounter
         lCounter+=3
-        generateTAC(node.children[3])
-        generateTAC(node.children[2])
+        #generateTAC(node.children[3])
+        #generateTAC(node.children[2])
         f.write("goto L"+str(saveLCount)+"\n")
-        f.write("\nL"+str(saveLCount+2)+"\n")
+        f.write("\nFORL"+str(saveLCount+2)+"\n")
     elif not node.children:
         if node.type[0] == "-":
             f.write("t"+str(tCounter)+" := 0 - "+node.type[1:]+"\n")
@@ -143,8 +136,5 @@ def generateTAC(node):
         else:
             tNodes[node]=node.type
 
-
-
-#printChildren(root)
 generateTAC(root)
 print('\033[92m' + "La compilacion fue exitosa. El resultado de 3AC es en output.txt" + '\033[0m')

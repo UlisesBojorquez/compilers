@@ -33,12 +33,14 @@ def hasGreaterPrecedence(a, b):
     else:
         return False
 
+
 def treeFromInfix(input):
     #Infix to Postfix
     stack = []
     output = []
     for a in input:
         e = a
+        print(e)
         if(e == "("):
             stack.append(e)
         elif(e == ")"):
@@ -57,6 +59,7 @@ def treeFromInfix(input):
     while(len(stack)>0):
         output.append(stack.pop())
 
+    print(output)
     #Postfix to Tree
     stack = []
     input = output
@@ -113,10 +116,12 @@ def p_simpstmt_assdec_num(p):
     simpstmt : INT ID '=' numexpr
         | FLOAT ID '=' numexpr
     '''
+    print(p[4])
     d=Node('declaration', [Node(p[2]),Node(p[1])])
     setParentOfChildren(d)
     p[0]=Node('assignment',[d, treeFromInfix(p[4])])
     setParentOfChildren(p[0])
+
 
 def p_simpstmt_dec(p):
     '''
@@ -157,6 +162,52 @@ def p_flowctrl_if(p):
             ch.append(p[9])
         p[0]=Node('if',children=ch)
         setParentOfChildren(p[0])
+
+def p_flowctrl_while(p):
+    '''
+    flowctrl : WHILE '(' boolexpr ')' '{' block '}'
+    '''
+    if(len(p)>2):
+        ch=[p[3],p[6]]
+        p[0]=Node('while',children=ch)
+        setParentOfChildren(p[0])
+
+def p_flowctrl_for(p):
+    '''
+    flowctrl : FOR '(' forexpr ')' '{' block '}'
+    '''
+    if(len(p)>2):
+        ch=[p[3],p[6]]
+        p[0]=Node('for',children=ch)
+        setParentOfChildren(p[0])
+
+def p_forexpr(p):
+    '''
+    forexpr : simpstmtfor ';' boolexpr ';' simpstmt
+    '''
+    if(len(p)>4):
+        ch=[p[1],p[3],p[5]]
+        p[0] = Node('forexpr',children=ch)
+        setParentOfChildren(p[0])
+
+
+def p_simpstmt_plusminus(p):
+    '''
+    simpstmt : ID PLUSPLUS
+                | ID MINUSMINUS
+    '''
+    p[0] = Node('iter', [Node(p[1]), Node(p[2])])
+    setParentOfChildren(p[0])
+
+
+def p_simpstmtfor_assdec_num(p):
+    '''
+    simpstmtfor : INT ID '=' numexpr
+    '''
+    d=Node('declaration', [Node(p[2]),Node(p[1])])
+    setParentOfChildren(d)
+    p[0]=Node('assignment',[d, treeFromInfix(p[4])])
+    setParentOfChildren(p[0])
 
 def p_elif(p):
     '''
@@ -353,4 +404,3 @@ def printChildren(node,level=0):
             printChildren(i, level+1)
 
 printChildren(root)
-
