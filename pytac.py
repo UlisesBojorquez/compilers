@@ -112,13 +112,6 @@ def generateTAC(node):
         generateTAC(node.children[1])
         f.write("goto L"+str(saveLCount)+"\n")
         f.write("\nL"+str(saveLCount+2)+"\n")
-    elif node.type == "dowh":
-        f.write("\nL"+str(lCounter)+"\n")
-        saveLCount=lCounter
-        lCounter+=1
-        generateTAC(node.children[0])
-        generateTAC(node.children[1])
-        f.write("if ("+tNodes[node.children[1]]+") goto L"+str(saveLCount)+"\n")
     elif node.type == "for":
         generateTAC(node.children[0])
         f.write("\nL"+str(lCounter)+"\n")
@@ -143,8 +136,5 @@ def generateTAC(node):
         else:
             tNodes[node]=node.type
 
-
-
-#printChildren(root)
 generateTAC(root)
 print('\033[92m' + "La compilacion fue exitosa. El resultado de 3AC es en output.txt" + '\033[0m')

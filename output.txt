@@ -23,3 +23,12 @@ goto L5
 L4
 
 L5
+
+L6
+if (true) goto L7
+goto L8
+
+L7
+goto L6
+
+L8

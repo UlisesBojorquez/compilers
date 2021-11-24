@@ -10,6 +10,8 @@ reserved = {
     'if' : 'IF',
     'elif' : 'ELIF',
     'else' : 'ELSE',
+    'for' : 'FOR',
+    'while' : 'WHILE',
     'boolean' : 'BOOLEAN',
     'float' : 'FLOAT',
     'int' : 'INT',
@@ -20,7 +22,7 @@ reserved = {
 
 #Palabras reservadas para los tokens
 tokens = [
-    'NUMI', 'NUMF', 'ID', "EQUALS", "NOTEQUALS", "GTREQTHAN", "LSSEQTHAN"
+    'NUMI', 'NUMF', 'ID', "EQUALS", "NOTEQUALS", "GTREQTHAN", "LSSEQTHAN", "PLUSPLUS", "MINUSMINUS"
 ] + list(reserved.values())
 
 #Tokens (Se usan expresiones regulares para reconocerlos)
@@ -28,8 +30,10 @@ t_EQUALS = r'=='
 t_NOTEQUALS = r'!='
 t_GTREQTHAN = r'>='
 t_LSSEQTHAN = r'<='
-t_NUMI = r'\d+([uU]|[lL]|[uU][lL]|[lL][uU])?'
+t_PLUSPLUS = r'\+\+'
+t_MINUSMINUS = r'\-\-'
 t_NUMF = r'((\d+)(\.\d+)(e(\+|-)?(\d))? | (\d+)e(\+|-)?(\d+))([lL]|[fF])?'
+t_NUMI = r'\d+([uU]|[lL]|[uU][lL]|[lL][uU])?'
 t_ignore = ' \t'
 
 #Nos ayuda a reconocer el salto de linea

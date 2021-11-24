@@ -78,6 +78,7 @@ def treeNumTypeCheck(node):
                 if node.children[i].ptype=="int":
                     parseNode=Node('int2float',ptype="float")
                     node.children[i].parent=parseNode
+                    print(i)
                     parseNode.children[i]=[node.children[i]]
                     node.children[i]=parseNode
             node.ptype="float"
@@ -211,7 +212,5 @@ def semanticAnalysis(r):
         for child in r.children:
             semanticAnalysis(child)
 
-#printVariables(root)
 setVariables(root)
 semanticAnalysis(root)
-#printChildren(root)
